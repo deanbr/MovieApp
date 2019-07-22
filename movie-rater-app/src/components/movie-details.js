@@ -2,6 +2,28 @@ import React, { Component } from 'react';
 var FontAwesome = require('react-fontawesome');
 
 class MovieDetails extends Component {
+
+  state = {
+    highlighted: -1
+  }
+
+  highlightRate = rating => evt => {
+    this.setState({highlighted: rating});
+  }
+
+  ratingClicked = rating => evt => {
+    fetch(`http://127.0.0.1:8000/api/movies/${this.props.movie.id}/rate_movie/`, {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Token '
+      },
+      body: JSON.stringify({stars: rating})
+    }).then( resp => resp.json() )
+    .then( resp => console.log(resp) )
+    .catch( error => console.log(error) );
+  }
+
   render() {
     const movie = this.props.movie;
     return (
@@ -17,6 +39,14 @@ class MovieDetails extends Component {
             ({movie.number_of_ratings})
 
             <p>{movie.description}</p>
+
+            <div className="rate-container">
+              <h2>Rate the movie</h2>
+              { [...Array(5)].map( (e, i) => {
+                  return <FontAwesome key={i} name="star" className={this.state.highlighted > i - 1 ? 'purple' : ''} 
+                            onMouseEnter={this.highlightRate(i)} onMouseLeave={this.highlightRate(-1)} onClick={this.ratingClicked(i + 1)} />;
+              })}
+            </div>
           </div>
         ) : null
         }

@@ -16,7 +16,7 @@ class App extends Component {
         'Authorization': 'Token '
       }
     }).then( resp => resp.json() )
-    .then( resp =>  this.setState({movies: resp}) )
+    .then( resp => this.setState({movies: resp}) )
     .catch( error => console.log(error) );
   }
 
