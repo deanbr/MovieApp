@@ -12,3 +12,7 @@
   grid-template-columns: 1fr 1fr;
   text-align: left;
 }
+
+.yellow {
+  color: yellow;
+}
