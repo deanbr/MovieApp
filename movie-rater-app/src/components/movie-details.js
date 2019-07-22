@@ -37,6 +37,7 @@ class MovieDetails extends Component {
 
   render() {
     const movie = this.props.movie;
+    
     return (
       <React.Fragment>
         { movie ? (

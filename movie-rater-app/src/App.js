@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import './App.css';
 import MovieList from './components/movie-list';
 import MovieDetails from './components/movie-details';
+import MovieForm from './components/movie-form';
 
 class App extends Component {
   state = {
     movies: [], 
-    selectedMovie: null
+    selectedMovie: null,
+    editedMovie: null
   }
 
   componentDidMount() {
@@ -21,7 +23,7 @@ class App extends Component {
   }
 
   movieClicked = movie => {
-    this.setState({selectedMovie: movie});
+    this.setState({selectedMovie: movie, editedMovie: null});
   }
 
   movieDeleted = selectedMovie => {
@@ -29,14 +31,29 @@ class App extends Component {
     this.setState({movies: movies});
   }
 
+  editClicked = movie => {
+    console.log("edited clicked in app");
+    this.setState({editedMovie: movie});
+  }
+
+  newMovie = () => {
+    this.setState({editedMovie: {title: '', description: ''}})
+  }
+
   render() {
     return (
       <div className="App">
         <h1>Movie Rater</h1>
         <div className="layout">
-          <MovieList movies={this.state.movies} 
-            movieClicked={this.movieClicked} movieDeleted={this.movieDeleted} />
-          <MovieDetails movie={this.state.selectedMovie} updateMovie={this.movieClicked} />
+          <MovieList movies={this.state.movies} movieClicked={this.movieClicked}
+            editClicked={this.editClicked} movieDeleted={this.movieDeleted} newMovie={this.newMovie} />
+          
+          <div>
+            { this.state.editedMovie ? 
+              <MovieForm movie={this.state.editedMovie} /> : 
+              <MovieDetails movie={this.state.selectedMovie} updateMovie={this.movieClicked} /> 
+            }
+          </div>
         </div>
       </div>
     );
