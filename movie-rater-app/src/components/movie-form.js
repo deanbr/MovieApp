@@ -3,29 +3,62 @@ import React, { Component } from 'react';
 class MovieForm extends Component {
 
   state = {
-    
+    editedMovie: this.props.movie
   }
 
   cancelClicked = () => {
     this.props.cancelForm();
   }
 
-  inputChanged = () => {
-
+  inputChanged = event => {
+    let movie = this.state.editedMovie;
+    movie[event.target.name] = event.target.value;
+    this.setState({editedMovie: movie});
   }
 
   saveClicked = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/api/movies/`, {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${process.env.REACT_APP_API_TOKEN}`
+      },
+      body: JSON.stringify(this.state.editedMovie)
+    }).then( resp => resp.json() )
+    .then( resp => this.props.createdMovie(resp) )
+    .catch( error => console.log(error) );
+  }
 
+  updateClicked = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/api/movies/${this.props.movie.id}/`, {
+      method: 'PUT', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${process.env.REACT_APP_API_TOKEN}`
+      },
+      body: JSON.stringify(this.state.editedMovie)
+    }).then( resp => resp.json() )
+    .then( resp => this.props.editedMovie(resp) )
+    .catch( error => console.log(error) );
   }
 
   render() {
+    const disabled = this.state.editedMovie.title.length === 0 || 
+                      this.state.editedMovie.description.length === 0;
+
     return (
       <React.Fragment>
         <span>Title</span><br />
-        <input type="text" value={this.props.movie.title} onChange={this.inputChanged} /><br />
+        <input type="text" name="title" value={this.props.movie.title} 
+          onChange={this.inputChanged} /><br />
         <span>Description</span><br />
-        <textarea value={this.props.movie.description} onChange={this.inputChanged} /><br />
-        <button onClick={this.saveClicked}>Save</button>
+        <textarea name="description" value={this.props.movie.description} 
+          onChange={this.inputChanged} /><br />
+        
+        { this.props.movie.id ? 
+          <button disabled={disabled} onClick={this.updateClicked}>Update</button> : 
+          <button disabled={disabled} onClick={this.saveClicked}>Save</button> 
+        }
         <button onClick={this.cancelClicked}>Cancel</button>
       </React.Fragment>
     )

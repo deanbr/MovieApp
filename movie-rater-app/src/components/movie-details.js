@@ -16,7 +16,7 @@ class MovieDetails extends Component {
       method: 'POST', 
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Token ${process.env.API_TOKEN}`
+        'Authorization': `Token ${process.env.REACT_APP_API_TOKEN}`
       },
       body: JSON.stringify({stars: rating})
     }).then( resp => resp.json() )
@@ -28,7 +28,7 @@ class MovieDetails extends Component {
     fetch(`${process.env.REACT_APP_API_URL}/api/movies/${this.props.movie.id}/`, {
       method: 'GET', 
       headers: {
-        'Authorization': `Token ${process.env.API_TOKEN}`
+        'Authorization': `Token ${process.env.REACT_APP_API_TOKEN}`
       }
     }).then( resp => resp.json() )
     .then( resp => this.props.updateMovie(resp) )
@@ -37,7 +37,7 @@ class MovieDetails extends Component {
 
   render() {
     const movie = this.props.movie;
-    
+
     return (
       <React.Fragment>
         { movie ? (

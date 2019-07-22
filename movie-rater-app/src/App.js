@@ -12,17 +12,17 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch('http://127.0.0.1:8000/api/movies/', {
+    fetch(`${process.env.REACT_APP_API_URL}/api/movies/`, {
       method: 'GET', 
       headers: {
-        'Authorization': 'Token '
+        'Authorization': `Token ${process.env.REACT_APP_API_TOKEN}`
       }
     }).then( resp => resp.json() )
     .then( resp => this.setState({movies: resp}) )
     .catch( error => console.log(error) );
   }
 
-  movieClicked = movie => {
+  loadMovie = movie => {
     this.setState({selectedMovie: movie, editedMovie: null});
   }
 
@@ -37,11 +37,15 @@ class App extends Component {
   }
 
   newMovie = () => {
-    this.setState({editedMovie: {title: '', description: ''}})
+    this.setState({editedMovie: {title: '', description: ''}});
   }
 
   cancelForm = () => {
-    this.setState({editedMovie: null})
+    this.setState({editedMovie: null});
+  }
+
+  createdMovie = movie => {
+    this.setState({movie: [...this.state.movies, movie]});
   }
 
   render() {
@@ -49,12 +53,13 @@ class App extends Component {
       <div className="App">
         <h1>Movie Rater</h1>
         <div className="layout">
-          <MovieList movies={this.state.movies} movieClicked={this.movieClicked}
+          <MovieList movies={this.state.movies} movieClicked={this.loadMovie}
             editClicked={this.editClicked} movieDeleted={this.movieDeleted} newMovie={this.newMovie} />
           
           <div>
             { this.state.editedMovie ? 
-              <MovieForm movie={this.state.editedMovie} cancelForm={this.cancelForm} /> : 
+              <MovieForm movie={this.state.editedMovie} cancelForm={this.cancelForm} 
+                createdMovie={this.createdMovie} editedMovie={this.loadMovie} /> : 
               <MovieDetails movie={this.state.selectedMovie} updateMovie={this.movieClicked} /> 
             }
           </div>
