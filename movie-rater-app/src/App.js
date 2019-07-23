@@ -45,7 +45,7 @@ class App extends Component {
   }
 
   createdMovie = movie => {
-    this.setState({movie: [...this.state.movies, movie]});
+    this.setState({movies: [...this.state.movies, movie]});
   }
 
   render() {
@@ -60,7 +60,7 @@ class App extends Component {
             { this.state.editedMovie ? 
               <MovieForm movie={this.state.editedMovie} cancelForm={this.cancelForm} 
                 createdMovie={this.createdMovie} editedMovie={this.loadMovie} /> : 
-              <MovieDetails movie={this.state.selectedMovie} updateMovie={this.movieClicked} /> 
+              <MovieDetails movie={this.state.selectedMovie} updateMovie={this.loadMovie} /> 
             }
           </div>
         </div>
