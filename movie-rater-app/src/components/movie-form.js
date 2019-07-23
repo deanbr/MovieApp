@@ -59,6 +59,8 @@ class MovieForm extends Component {
           <button disabled={disabled} onClick={this.updateClicked}>Update</button> : 
           <button disabled={disabled} onClick={this.saveClicked}>Save</button> 
         }
+
+        &nbsp;
         <button onClick={this.cancelClicked}>Cancel</button>
       </React.Fragment>
     )
